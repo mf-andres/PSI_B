@@ -9,10 +9,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public final class GUI extends JFrame implements ActionListener {
-    JLabel leftPanelRoundsLabel;
-    JLabel leftPanelExtraInformation;
-    JList<String> list;
+ 
+	JLabel leftPanelGamesLabel; //Etiqueta con el juego correspondiente
+    JLabel leftPanelExtraInformation; //Etiqueta con los parámetros
+    JList<String> list; //Lista con los jugadores encontrados 
     JScrollPane player1ScrollPane; //container that shows the payoff matrix
+    JButton leftPanelNewButton; 
     private MainAgent mainAgent;
     private JPanel rightPanel;
     private JTextArea rightPanelLoggingTextArea;
@@ -45,17 +47,39 @@ public final class GUI extends JFrame implements ActionListener {
     }
 
     public void setPlayersUI(String[] players) {
-        DefaultListModel<String> listModel = new DefaultListModel<>();
+       
+    	DefaultListModel<String> listModel = new DefaultListModel<>();
         for (String s : players) {
             listModel.addElement(s);
         }
         list.setModel(listModel);
     }
 
-    public void SetPayoffTable(String[][] values, String[] columnNames){
+    public void setPayoffTable(String[][] values, String[] columnNames){
 
     	JTable newTable = new JTable(values, columnNames);
     	player1ScrollPane.setViewportView(newTable);
+    }
+    
+    //parameters debe ser un string con los parámetros tipo N,S,R,I,P
+    public void setParametersLabel(String parameters) {
+    	
+    	leftPanelExtraInformation.setText("Parameters - " + parameters);
+    }
+    
+    public void setGamesLabel() {
+		
+    	leftPanelGamesLabel.setText("League has ended");
+	}
+
+	public void setGamesLabel(String player1, String player2) {
+   
+    	leftPanelGamesLabel.setText("Game: " + player1 + " vs " + player2);
+    }
+    
+    public void enableNewButton() {
+    	
+    	leftPanelNewButton.setEnabled(true);
     }
     
     public void initUI() {
@@ -100,13 +124,17 @@ public final class GUI extends JFrame implements ActionListener {
         leftPanel.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
 
-        leftPanelRoundsLabel = new JLabel("Round 0 / null");
-        JButton leftPanelNewButton = new JButton("New");
+        leftPanelGamesLabel = new JLabel("Game: - vs -");
+        leftPanelNewButton = new JButton("New");
+        
+        //se desbloqueará cuando el número de jugadores localizados sea mayor que N
+        leftPanelNewButton.setEnabled(false);
+        
         leftPanelNewButton.addActionListener(actionEvent -> mainAgent.newGame());
         JButton leftPanelStopButton = new JButton("Stop");
         leftPanelStopButton.addActionListener(this);
-        JButton leftPanelContinueButton = new JButton("Continue");
-        leftPanelContinueButton.addActionListener(this);
+        JButton leftPanelPlayGameButton = new JButton("Play Game");
+        leftPanelPlayGameButton.addActionListener(actionEvent -> mainAgent.releasePlayGameMutex());
 
         leftPanelExtraInformation = new JLabel("Parameters - NSRIP");
 
@@ -117,13 +145,13 @@ public final class GUI extends JFrame implements ActionListener {
         gc.weighty = 0.5;
 
         gc.gridy = 0;
-        leftPanel.add(leftPanelRoundsLabel, gc);
+        leftPanel.add(leftPanelGamesLabel, gc);
         gc.gridy = 1;
         leftPanel.add(leftPanelNewButton, gc);
         gc.gridy = 2;
         leftPanel.add(leftPanelStopButton, gc);
         gc.gridy = 3;
-        leftPanel.add(leftPanelContinueButton, gc);
+        leftPanel.add(leftPanelPlayGameButton, gc);
         gc.gridy = 4;
         gc.weighty = 10;
         leftPanel.add(leftPanelExtraInformation, gc);
@@ -312,18 +340,6 @@ public final class GUI extends JFrame implements ActionListener {
         return menuBar;
     }
     
-    void editParameters() {
-    	
-    	String parameters = JOptionPane.showInputDialog(new Frame("Configure parameters"), "Enter parameters N,S,R,I,P");
-    	String line = "Parameters: " + parameters;
-    	
-    	//procesar parametros
-    	
-    	//set parameters
-    	
-    	logLine(line);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton) {
@@ -335,7 +351,20 @@ public final class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public class LoggingOutputStream extends OutputStream {
+    //para actualizar los parámetros en el mainAgent
+    //los parámetros se imprimirán de vuelta
+	void editParameters() {
+		
+		String parameters = JOptionPane.showInputDialog(new Frame("Configure parameters"), "Enter parameters N,S,R,I,P");
+		String line = "Parameters: " + parameters;
+		  	
+		//set parameters
+		mainAgent.setParameters(parameters);
+		
+		logLine(line);
+	}
+
+	public class LoggingOutputStream extends OutputStream {
         private JTextArea textArea;
 
         public LoggingOutputStream(JTextArea jTextArea) {

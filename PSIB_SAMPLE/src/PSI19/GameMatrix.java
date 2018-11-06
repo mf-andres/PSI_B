@@ -128,7 +128,7 @@ public class GameMatrix {
 		return cell;
 	}
 	
-	String[][] getTraducted(){
+	String[][] getTranslated(){
 		
 		String[][] traductedMatrix = new String[s][s];
 		

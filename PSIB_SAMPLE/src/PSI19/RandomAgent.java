@@ -19,6 +19,7 @@ public class RandomAgent extends Agent {
     private ACLMessage msg;
 
     protected void setup() {
+    	
         state = State.s0NoConfig;
 
         //Register in the yellow pages as a player
@@ -33,19 +34,22 @@ public class RandomAgent extends Agent {
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
+        
         addBehaviour(new Play());
-        System.out.println("RandomAgent " + getAID().getName() + " is ready.");
-
+        
+        //System.out.println("RandomAgent " + getAID().getName() + " is ready.");
     }
 
     protected void takeDown() {
+    	
         //Deregister from the yellow pages
         try {
             DFService.deregister(this);
         } catch (FIPAException e) {
             e.printStackTrace();
         }
-        System.out.println("RandomPlayer " + getAID().getName() + " terminating.");
+        
+        //System.out.println("RandomPlayer " + getAID().getName() + " terminating.");
     }
 
     private enum State {
@@ -53,29 +57,36 @@ public class RandomAgent extends Agent {
     }
 
     private class Play extends CyclicBehaviour {
+    	
         Random random = new Random(1000);
+        
         @Override
         public void action() {
-            System.out.println(getAID().getName() + ":" + state.name());
+        	
+            //System.out.println(getAID().getName() + ":" + state.name());
+            
             msg = blockingReceive();
             if (msg != null) {
-                System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
-                //-------- Agent logic
+            	
+                ////System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
+                
+            	//-------- Agent logic
                 switch (state) {
                     case s0NoConfig:
-                        //If INFORM Id#_#_,_,_,_ PROCESS SETUP --> go to state 1
+                        
+                    	//If INFORM Id#_#_,_,_,_ PROCESS SETUP --> go to state 1
                         //Else ERROR
                         if (msg.getContent().startsWith("Id#") && msg.getPerformative() == ACLMessage.INFORM) {
                             boolean parametersUpdated = false;
                             try {
                                 parametersUpdated = validateSetupMessage(msg);
                             } catch (NumberFormatException e) {
-                                System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
+                                //System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
                             }
                             if (parametersUpdated) state = State.s1AwaitingGame;
 
                         } else {
-                            System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
+                            //System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
                         }
                         break;
                     case s1AwaitingGame:
@@ -88,19 +99,19 @@ public class RandomAgent extends Agent {
                                 try {
                                     validateSetupMessage(msg);
                                 } catch (NumberFormatException e) {
-                                    System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
+                                  //  //System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
                                 }
                             } else if (msg.getContent().startsWith("NewGame#")) {
                                 boolean gameStarted = false;
                                 try {
                                     gameStarted = validateNewGame(msg.getContent());
                                 } catch (NumberFormatException e) {
-                                    System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
+                                    ////System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
                                 }
                                 if (gameStarted) state = State.s2Round;
                             }
                         } else {
-                            System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
+                            //System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
                         }
                         break;
                     case s2Round:
@@ -112,7 +123,7 @@ public class RandomAgent extends Agent {
                             ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                             msg.addReceiver(mainAgent);
                             msg.setContent("Position#" + random.nextInt(S));
-                            System.out.println(getAID().getName() + " sent " + msg.getContent());
+                            //System.out.println(getAID().getName() + " sent " + msg.getContent());
                             send(msg);
                             state = State.s3AwaitingResult;
                         } else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Changed#")) {
@@ -120,7 +131,7 @@ public class RandomAgent extends Agent {
                         } else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("EndGame")) {
                             state = State.s1AwaitingGame;
                         } else {
-                            System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message:" + msg.getContent());
+                            //System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message:" + msg.getContent());
                         }
                         break;
                     case s3AwaitingResult:
@@ -130,7 +141,7 @@ public class RandomAgent extends Agent {
                             //Process results
                             state = State.s2Round;
                         } else {
-                            System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
+                            //System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
                         }
                         break;
                 }
