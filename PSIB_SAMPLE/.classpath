@@ -6,10 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/andres/Documentos/PSI/B/JADE code and tutorials-20181013/jade.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Familia/git/PSI_B/PSIB_SAMPLE/jade.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
