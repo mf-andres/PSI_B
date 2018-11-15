@@ -67,15 +67,10 @@ public final class GUI extends JFrame implements ActionListener {
     	leftPanelExtraInformation.setText("Parameters - " + parameters);
     }
     
-    public void setGamesLabel() {
+    public void setGamesLabel(String text) {
 		
-    	leftPanelGamesLabel.setText("League has ended");
+    	leftPanelGamesLabel.setText(text);
 	}
-
-	public void setGamesLabel(String player1, String player2) {
-   
-    	leftPanelGamesLabel.setText("Game: " + player1 + " vs " + player2);
-    }
     
     public void enableNewButton() {
     	
@@ -132,8 +127,8 @@ public final class GUI extends JFrame implements ActionListener {
         
         leftPanelNewButton.addActionListener(actionEvent -> mainAgent.newGame());
         JButton leftPanelStopButton = new JButton("Stop");
-        leftPanelStopButton.addActionListener(this);
-        JButton leftPanelPlayGameButton = new JButton("Play Game");
+        leftPanelStopButton.addActionListener(actionEvent -> mainAgent.stop = true);
+        JButton leftPanelPlayGameButton = new JButton("Continue");
         leftPanelPlayGameButton.addActionListener(actionEvent -> mainAgent.releasePlayGameMutex());
 
         leftPanelExtraInformation = new JLabel("Parameters - NSRIP");

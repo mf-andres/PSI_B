@@ -1,0 +1,3 @@
+-gui -agents "MainAgent:PSI19.MainAgent;P1:PSI19.RandomAgent;P2:PSI19.RandomAgent;P3:PSI19.RandomAgent"
+
+-gui -agents "MainAgent:PSI19.MainAgent;P1:PSI19.FixedAgent;P2:PSI19.FixedAgent"

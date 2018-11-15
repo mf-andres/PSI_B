@@ -20,6 +20,7 @@ public class MainAgent extends Agent {
 	private AID[] playerAgents;
 	private GameParametersStruct parameters = new GameParametersStruct();
 	private Semaphore playGameMutex = new Semaphore(0);
+	public boolean stop = false;
 	
 	@Override
 	protected void setup() {
@@ -209,7 +210,8 @@ public class MainAgent extends Agent {
 				for (int j = i + 1; j < parameters.N; j++) { 
 					
 					//games label
-					gui.setGamesLabel(Integer.toString(i), Integer.toString(j));
+					String label = "Game: " + Integer.toString(i) + " vs " + Integer.toString(j);
+					gui.setGamesLabel(label);
 					
 					//matrix
 					GameMatrix matrix = new GameMatrix(parameters.S);
@@ -230,6 +232,14 @@ public class MainAgent extends Agent {
 
 					scores = playGame(players.get(i), players.get(j), matrix);
 					
+					if(stop) {
+						
+						gui.log("Game has stoped");
+						gui.setGamesLabel("Game stoped");
+						stop = false; //to reset
+						return;
+					}
+					
 					scoreMatrix.updateScore(i, scores[0]);
 					scoreMatrix.updateScore(j, scores[1]);
 
@@ -238,7 +248,7 @@ public class MainAgent extends Agent {
 			}
 
 			gui.log("Main league has ended");
-			gui.setGamesLabel();
+			gui.setGamesLabel("League has ended");
 		}
 
 		private int[] playGame(PlayerInformation player1, PlayerInformation player2,GameMatrix matrix) {
@@ -259,7 +269,12 @@ public class MainAgent extends Agent {
 			int p1Score = 0, p2Score = 0;
 			
 			for(int round = 0; round < parameters.R; round++) {
+				
+				//stop?
+				if(stop ) return null;
 
+				gui.logLine("Round " + round);
+				
 				//request position
 				gui.logLine("Main Request Position");
 				
@@ -297,22 +312,25 @@ public class MainAgent extends Agent {
 				msg.setContent("Results#" + pos1 + "," + pos2 + "#" + rewardP1 + "," + rewardP2);
 				send(msg);				
 
-				// TODO queda probar esto de aquí
+				// TODO imprimir lo que ha cambiado la matriz
 				//si I es 0 pues la matriz no se altera nunca
 				if(round == parameters.I && parameters.I != 0) {
-					
+										
 					//alter matrix
 					float p =  matrix.alter(parameters.P);
 					gui.setPayoffTable(matrix.getTranslated(), matrix.getColumnNames());
 					
 					//inform the players
-					gui.logLine("Main Inform Changed");
+					gui.logLine("Main Inform Changed: " + p);
 					msg = new ACLMessage(ACLMessage.INFORM);
 					msg.addReceiver(player1.aid);
 					msg.addReceiver(player2.aid);
 					msg.setContent("Changed#" + p);
 					send(msg);
 
+					String label = "Game: " + Integer.toString(player1.id) + " vs " + Integer.toString(player2.id) + " w changed matrix: " + p;
+					gui.setGamesLabel(label);
+					
 					//mutex
 					//el juego no empieza hasta que el administrador no lo quiera
 					gui.log("press play game to proccess");
