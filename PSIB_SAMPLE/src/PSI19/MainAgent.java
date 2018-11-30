@@ -192,10 +192,12 @@ public class MainAgent extends Agent {
 
 			//Initialize (inform ID)
 			for (PlayerInformation player : players) {
-
+				
 				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 				msg.setContent("Id#" + player.id + "#" + parameters.N + "," + parameters.S + "," + parameters.R + "," + parameters.I + "," + parameters.P);
 				msg.addReceiver(player.aid);
+
+				gui.logLine("Main Inform Id :" + msg.getContent());
 
 				send(msg);
 			}
@@ -305,7 +307,7 @@ public class MainAgent extends Agent {
 				p1Score += rewardP1;
 				p2Score += rewardP2;
 
-				gui.logLine("Main Inform Results");
+				gui.logLine("Main Inform Results " + rewardP1 + " " + rewardP2);
 				msg = new ACLMessage(ACLMessage.INFORM);
 				msg.addReceiver(player1.aid);
 				msg.addReceiver(player2.aid);
