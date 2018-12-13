@@ -5,3 +5,4 @@
 -gui -agents "MainAgent:PSI19.MainAgent;P1:PSI19.FixedAgent;P2:PSI19.LAAgent"
 
 -gui -agents "MainAgent:PSI19.MainAgent;P1:PSI19.RandomAgent;P2:PSI19.LAAgent"
+

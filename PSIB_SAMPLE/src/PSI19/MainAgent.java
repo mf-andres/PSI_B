@@ -219,7 +219,7 @@ public class MainAgent extends Agent {
 					GameMatrix matrix = new GameMatrix(parameters.S);
 					gui.setPayoffTable(matrix.getTranslated(), matrix.getColumnNames());
 					
-					gui.log("press play game to proccess");
+					gui.log("press Continue to proccess");
 					
 					//mutex
 					//el juego no empieza hasta que el administrador no lo quiera

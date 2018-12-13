@@ -120,6 +120,7 @@ public final class GUI extends JFrame implements ActionListener {
         GridBagConstraints gc = new GridBagConstraints();
 
         leftPanelGamesLabel = new JLabel("Game: - vs -");
+       
         leftPanelNewButton = new JButton("New");
         
         //se desbloqueará cuando el número de jugadores localizados sea mayor que N
@@ -185,7 +186,6 @@ public final class GUI extends JFrame implements ActionListener {
         list.setVisibleRowCount(5);
         JScrollPane listScrollPane = new JScrollPane(list);
 
-        JLabel info1 = new JLabel("Selected player info");
         JButton updatePlayersButton = new JButton("Update players");
         updatePlayersButton.addActionListener(actionEvent -> mainAgent.updatePlayers());
 //        updatePlayersButton.addActionListener(actionEvent -> mainAgent.updatePlayersDinamically());
@@ -203,7 +203,6 @@ public final class GUI extends JFrame implements ActionListener {
         gc.gridx = 1;
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.NONE;
-        centralTopSubpanel.add(info1, gc);
         gc.gridy = 1;
         centralTopSubpanel.add(updatePlayersButton, gc);
 
@@ -274,55 +273,22 @@ public final class GUI extends JFrame implements ActionListener {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuFile = new JMenu("File");
-        JMenuItem exitFileMenu = new JMenuItem("Exit");
-        exitFileMenu.setToolTipText("Exit application");
-        exitFileMenu.addActionListener(this);
-
+        
         JMenuItem newGameFileMenu = new JMenuItem("New Game");
         newGameFileMenu.setToolTipText("Start a new game");
-        newGameFileMenu.addActionListener(this);
+        newGameFileMenu.addActionListener(actionEvent -> mainAgent.newGame());
 
         menuFile.add(newGameFileMenu);
-        menuFile.add(exitFileMenu);
         menuBar.add(menuFile);
 
         JMenu menuEdit = new JMenu("Edit");
-        JMenuItem resetPlayerEditMenu = new JMenuItem("Reset Players");
-        resetPlayerEditMenu.setToolTipText("Reset all player");
-        resetPlayerEditMenu.setActionCommand("reset_players");
-        resetPlayerEditMenu.addActionListener(this);
 
         JMenuItem parametersEditMenu = new JMenuItem("Parameters");
         parametersEditMenu.setToolTipText("Modify the parameters of the game");
         parametersEditMenu.addActionListener(actionEvent -> editParameters());
 
-        menuEdit.add(resetPlayerEditMenu);
         menuEdit.add(parametersEditMenu);
         menuBar.add(menuEdit);
-
-        JMenu menuRun = new JMenu("Run");
-
-        JMenuItem newRunMenu = new JMenuItem("New");
-        newRunMenu.setToolTipText("Starts a new series of games");
-        newRunMenu.addActionListener(this);
-
-        JMenuItem stopRunMenu = new JMenuItem("Stop");
-        stopRunMenu.setToolTipText("Stops the execution of the current round");
-        stopRunMenu.addActionListener(this);
-
-        JMenuItem continueRunMenu = new JMenuItem("Continue");
-        continueRunMenu.setToolTipText("Resume the execution");
-        continueRunMenu.addActionListener(this);
-
-        JMenuItem roundNumberRunMenu = new JMenuItem("Number Of rounds");
-        roundNumberRunMenu.setToolTipText("Change the number of rounds");
-        roundNumberRunMenu.addActionListener(actionEvent -> logLine(JOptionPane.showInputDialog(new Frame("Configure rounds"), "How many rounds?") + " rounds"));
-
-        menuRun.add(newRunMenu);
-        menuRun.add(stopRunMenu);
-        menuRun.add(continueRunMenu);
-        menuRun.add(roundNumberRunMenu);
-        menuBar.add(menuRun);
 
         JMenu menuWindow = new JMenu("Window");
 

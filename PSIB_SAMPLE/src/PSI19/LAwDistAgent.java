@@ -124,7 +124,7 @@ public class LAwDistAgent extends Agent {
 						send(msg);
 						state = State.s3AwaitingResult;
 					} else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Changed#")) {
-						int p = validatePositionMessage(msg.getContent());
+						float p = validatePositionMessage(msg.getContent());
 						resetLA(p);
 					} else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("EndGame")){
 						resetLA(0);
@@ -146,18 +146,18 @@ public class LAwDistAgent extends Agent {
 			}
 		}
 
-		private void resetLA(int p) {
+		private void resetLA(float p) {
 			//volvemos a empezar de cero
 			
 			ultimaDistancia = 4;
 			stateAction = new StateAction("s0", iNumActions, true);
 		}
 
-		private int validatePositionMessage(String content) {
+		private float validatePositionMessage(String content) {
 			
 			String[] contentSplit = content.split("#");
 			if(contentSplit.length != 2) return -1;
-			return Integer.parseInt(contentSplit[1]);
+			return Float.parseFloat(contentSplit[1]);
 		}
 
 		private int[] validateResultsMessage(String content) {
@@ -170,10 +170,10 @@ public class LAwDistAgent extends Agent {
 			if(result1Split.length != 2 || result2Split.length != 2) return null;
 			
 			int[] puntuacion = new int[2];
-			if(myId == Integer.parseInt(result1Split[0])) {
+			if(myId < opponentId) {
 				puntuacion[0] = Integer.parseInt(result2Split[0]);
 				puntuacion[1] = Integer.parseInt(result2Split[1]);
-			} else if(myId == Integer.parseInt(result1Split[1])) {
+			} else {
 				puntuacion[0] = Integer.parseInt(result2Split[1]);
 				puntuacion[1] = Integer.parseInt(result2Split[0]);				
 			}
