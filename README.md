@@ -1,11 +1,11 @@
 
 # Descripción
 
-Este proyecto fue realizado en la materia de Programación de Iistemas Inteligentes del grado de Ingeniería en Tecnologías de Telecomunicaciones.
+Este proyecto fue realizado en la materia de Programación de Sistemas Inteligentes del grado de Ingeniería en Tecnologías de Telecomunicaciones.
 
-El objetivo del proyecto fue la implementación de varios agentes inteligentes que, mediante distintas estrategias, fueran capaces de cometir en un juego.
+El objetivo del proyecto fue la implementación de varios agentes inteligentes que, mediante distintas estrategias, fueran capaces de competir en un juego.
 
-El juego se basa en ir seleccionando elementos de una matriz, generada aleatoriamente, compuesta por vectores bidimensionales cuyas coordenadas son números enteros de 0 a 9. Se juega por parejas, de manera que un agente compite contra el otro. Para ello, cada agente genera un número entre 0 y la longitud de la matriz, el par de números resultantes determinará el elemento de la matriz escogido. Cada agente recibirá una puntuación relativa a la coordenada del vector escogido que le corresponde siendo el ganador, aquél que obtenga la mayor puntuación. La matriz debe ser explorada por los agentes.
+El juego se basa en ir seleccionando elementos de una matriz, generada aleatoriamente, compuesta por vectores bidimensionales cuyas coordenadas son números enteros de 0 a 9. Se juega por parejas, de manera que un agente compite contra el otro. Para ello, cada agente genera un número entre 0 y la longitud de la matriz, el par de números resultantes determinará el elemento de la matriz escogido. Entonces, cada agente recibirá una puntuación relativa a la coordenada del vector escogido correspondiente siendo el ganador aquél que obtenga la mayor puntuación. La matriz no es conocida por los agentes, debe ser explorada.
 
 ## Alumno:
 
